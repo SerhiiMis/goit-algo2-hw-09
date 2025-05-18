@@ -44,7 +44,36 @@ def random_local_search(func, bounds, iterations=1000, epsilon=1e-6):
 
 
 def simulated_annealing(func, bounds, iterations=1000, temp=1000, cooling_rate=0.95, epsilon=1e-6):
-    pass
+    current = [random.uniform(low, high) for (low, high) in bounds]
+    current_value = func(current)
+    best = current
+    best_value = current_value
+
+    for _ in range(iterations):
+        # Create neighbor with small random step
+        neighbor = [xi + random.uniform(-0.1, 0.1) for xi in current]
+        # Clamp to bounds
+        neighbor = [max(min(xi, high), low) for xi, (low, high) in zip(neighbor, bounds)]
+        neighbor_value = func(neighbor)
+
+        # Acceptance criteria
+        delta = neighbor_value - current_value
+        if delta < 0 or random.random() < math.exp(-delta / temp):
+            current = neighbor
+            current_value = neighbor_value
+
+        # Update best
+        if current_value < best_value:
+            best = current
+            best_value = current_value
+
+        # Cool down
+        temp *= cooling_rate
+        if temp < epsilon:
+            break
+
+    return best, best_value
+
 
 
 if __name__ == "__main__":
