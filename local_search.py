@@ -1,40 +1,52 @@
 import random
 import math
 
-# 🎯 Sphere function
+# Sphere function
 def sphere_function(x):
     return sum(xi ** 2 for xi in x)
 
-# 🚀 Hill Climbing algorithm
+# Hill Climbing algorithm
 def hill_climbing(func, bounds, iterations=1000, epsilon=1e-6):
-    # Стартова точка
+
     current = [random.uniform(low, high) for (low, high) in bounds]
     current_value = func(current)
 
     for _ in range(iterations):
-        # Генерація сусідньої точки з малим зсувом
+
         neighbor = [xi + random.uniform(-0.1, 0.1) for xi in current]
-        # Обмеження в межах bounds
+    
         neighbor = [max(min(xi, high), low) for xi, (low, high) in zip(neighbor, bounds)]
         neighbor_value = func(neighbor)
 
-        # Якщо покращення достатнє — приймаємо точку
+
         if current_value - neighbor_value > epsilon:
             current = neighbor
             current_value = neighbor_value
         else:
-            break  # Зупинити, якщо немає покращення
+            break  
 
     return current, current_value
 
-# 🧪 Порожні заглушки для інших методів (реалізуємо після)
+
 def random_local_search(func, bounds, iterations=1000, epsilon=1e-6):
-    pass
+    best = [random.uniform(low, high) for (low, high) in bounds]
+    best_value = func(best)
+
+    for _ in range(iterations):
+        candidate = [random.uniform(low, high) for (low, high) in bounds]
+        candidate_value = func(candidate)
+
+        if best_value - candidate_value > epsilon:
+            best = candidate
+            best_value = candidate_value
+
+    return best, best_value
+
 
 def simulated_annealing(func, bounds, iterations=1000, temp=1000, cooling_rate=0.95, epsilon=1e-6):
     pass
 
-# ▶️ Виконання
+
 if __name__ == "__main__":
     bounds = [(-5, 5), (-5, 5)]
 
